@@ -2,7 +2,7 @@
 FROM node:22-bullseye-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # Copy build script first
 COPY render-build.sh .
