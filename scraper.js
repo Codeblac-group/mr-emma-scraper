@@ -1,7 +1,26 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
+const chromium = require("chrome-aws-lambda");
+
+async function getBrowser() {
+    // RUNNING LOCALLY ON WINDOWS
+    if (process.platform === "win32") {
+        const puppeteer = require("puppeteer");
+        return puppeteer.launch({ headless: true });
+    }
+
+    // RUNNING ON RENDER (LINUX)
+    const puppeteer = require("puppeteer-core");
+    return await puppeteer.launch({
+        args: chromium.args,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
+        defaultViewport: chromium.defaultViewport
+    });
+}
+
 
 async function scrape(name, state) {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await getBrowser();
     const page = await browser.newPage();
     let pageNumber = 1;
     let results = [];
