@@ -2,14 +2,29 @@ const puppeteer = require("puppeteer-core");
 
 async function getBrowser() {
     return puppeteer.launch({
-        headless: "new",   // <-- FIXED HERE
+        headless: "new",
         executablePath: "/usr/bin/google-chrome",
         args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage",
             "--disable-gpu",
-            "--no-zygote"
+            "--no-zygote",
+            "--no-first-run",
+            "--disable-default-apps",
+            "--disable-extensions",
+            "--disable-background-networking",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-breakpad",
+            "--disable-component-extensions-with-background-pages",
+            "--disable-features=TranslateUI,BackForwardCache,WebRtcHideLocalIpsWithMdns",
+            "--disable-ipc-flooding-protection",
+            "--disable-notifications",
+            "--disable-popup-blocking",
+            "--disable-renderer-backgrounding",
+            "--disable-sync",
+            "--mute-audio",
         ]
     });
 }
