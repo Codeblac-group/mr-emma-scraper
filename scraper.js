@@ -13,6 +13,7 @@ async function getBrowser() {
     });
 }
 
+
 async function scrape(name, state) {
     const browser = await getBrowser();
     const page = await browser.newPage();
