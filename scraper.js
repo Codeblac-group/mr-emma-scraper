@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer-core");
-const chromium = require("chrome-aws-lambda");
+
 
 async function getBrowser() {
     // RUNNING LOCALLY ON WINDOWS
@@ -9,12 +9,17 @@ async function getBrowser() {
     }
 
     // RUNNING ON RENDER (LINUX)
-    const puppeteer = require("puppeteer-core");
-    return await puppeteer.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath,
-        headless: chromium.headless,
-        defaultViewport: chromium.defaultViewport
+    return puppeteer.launch({
+        headless: true,
+        executablePath: "/usr/bin/chromium-browser",
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--no-zygote",
+            "--single-process"
+        ]
     });
 }
 
