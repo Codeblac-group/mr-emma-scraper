@@ -9,7 +9,7 @@ async function scrape(name, state) {
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage",
             "--disable-gpu",
-            "--single-process" // reduces memory usage
+            "--single-process"
         ]
     });
 
