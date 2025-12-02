@@ -33,6 +33,19 @@ async function getBrowser() {
 async function scrape(name, state) {
     const browser = await getBrowser();
     const page = await browser.newPage();
+
+    await page.setCacheEnabled(false);
+    await page.setRequestInterception(true);
+
+    page.on("request", req => {
+        const type = req.resourceType();
+        if (["image", "stylesheet", "font"].includes(type)) {
+            req.abort();
+        } else {
+            req.continue();
+        }
+    });
+
     let pageNumber = 1;
     let results = [];
 
@@ -60,16 +73,11 @@ async function scrape(name, state) {
 
                 let phoneNumber = null;
 
-                if (phoneBtn) {
-                    phoneBtn.click();
-                }
-
+                if (phoneBtn) phoneBtn.click();
                 await new Promise(res => setTimeout(res, 1000));
 
                 const revealedPhone = profile.querySelector(".search-itm__ballonIcons");
-                if (revealedPhone) {
-                    phoneNumber = revealedPhone.innerText.trim();
-                }
+                if (revealedPhone) phoneNumber = revealedPhone.innerText.trim();
 
                 data.push({
                     businessName: nameEl?.innerText.trim() || null,
@@ -78,22 +86,24 @@ async function scrape(name, state) {
                     phone: phoneNumber
                 });
             }
-
             return data;
         });
 
-        console.log(`Page ${pageNumber} results:`, pageResults);
         results = results.concat(pageResults);
+
+        // 💡 free memory
+        await page.evaluate(() => { document.body.innerHTML = ""; });
+
+        await new Promise(res => setTimeout(res, 300));
 
         pageNumber++;
     }
 
     await browser.close();
 
-    console.log("\nFINAL SCRAPED RESULTS:");
-    console.log(results);
     return results;
 }
+
 
 exports.scrape = (req, res) => {
     try {
@@ -103,7 +113,7 @@ exports.scrape = (req, res) => {
         }
 
         scrape(name, state).then(data => res.status(200).send({ data }))
-                           .catch(err => res.status(500).send({ error: err.message }));
+            .catch(err => res.status(500).send({ error: err.message }));
     } catch (error) {
         return res.status(500).send({ error: error.message });
     }
