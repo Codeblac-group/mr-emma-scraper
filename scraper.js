@@ -31,7 +31,7 @@ async function scrape(name, state) {
             else req.continue();
         });
 
-        const url = `https://www.paginegialle.it/ricerca/${name}/${state}%20(RM)/p-${pageNumber}`;
+        const url = `https://www.paginegialle.it/persone/${name}/${state}%20(RM)/p-${pageNumber}`;
         console.log(`Visiting: ${url}`);
 
         await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
@@ -79,3 +79,5 @@ exports.scrape = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+
+scrape("idraulico", "roma").then(data => console.log(data)).catch(err => console.error(err));
