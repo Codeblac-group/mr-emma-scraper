@@ -5,7 +5,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function scrape(name, state) {
+async function scrape(name, state, type ='business') {
     // Launch Puppeteer with the new headless mode
     const browser = await puppeteer.launch({
         headless: "new",
@@ -69,10 +69,10 @@ async function scrape(name, state) {
 
 exports.scrape = async (req, res) => {
     try {
-        const { name, state } = req.body;
+        const { name, state, type } = req.body;
         if (!name || !state) return res.status(400).send({ error: "Missing 'name' or 'state' parameter." });
 
-        const data = await scrape(name, state);
+        const data = await scrape(name, state, type);
         res.status(200).send({ data });
     } catch (error) {
         console.error("Scrape failed:", error);
