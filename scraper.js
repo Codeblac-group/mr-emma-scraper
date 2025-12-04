@@ -5,7 +5,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function scrape(name, state, type ='business') {
+async function scrape(name, state, type = 'business') {
     // Launch Puppeteer with the new headless mode
     const browser = await puppeteer.launch({
         headless: "new",
@@ -30,8 +30,8 @@ async function scrape(name, state, type ='business') {
             if (["image", "stylesheet", "font"].includes(req.resourceType())) req.abort();
             else req.continue();
         });
+        const url = `https://www.paginebianche.it/${type.toLowerCase() === 'private' ? 'persone' : 'ricerca'}?qs=${name}&dv=${state}%20(RM)&p=${pageNumber}`;
 
-        const url = `https://www.paginegialle.it/${type.toLowerCase() === 'private' ? 'persone' : 'ricerca'}/${name}/${state}%20(RM)/p-${pageNumber}`;
         console.log(`Visiting: ${url}`);
 
         await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
