@@ -53,7 +53,7 @@ async function scrape(name, state, type = 'business') {
                 await phoneBtn.click();
                 // usage:
                 await sleep(800);
-                phone = await profile.$eval(".search-itm__ballonIcons", el => el.innerText).catch(() => null);
+                phone = await profile.$eval(".btn__label.tel", el => el.innerText).catch(() => null);
             }
 
             results.push({ businessName, category, address, phone });
