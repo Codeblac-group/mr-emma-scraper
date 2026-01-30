@@ -7,6 +7,7 @@ function sleep(ms) {
 async function scrape(name, state, type = "business") {
     const browser = await puppeteer.launch({
         headless: true,
+        protocolTimeout: 3000000, 
         args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
