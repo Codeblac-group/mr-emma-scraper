@@ -20,7 +20,8 @@ async function scrape(name, state, type = "business") {
     const results = [];
     let pageNumber = 1;
 
-    while (true) {
+    // Limit to a maximum of 20 pages
+    while (pageNumber <= 20) {
         const page = await browser.newPage();
 
         // Block heavy resources
